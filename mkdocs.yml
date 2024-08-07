@@ -1,0 +1,39 @@
+site_name: MkDocs Docker
+
+theme:
+  name: material
+  features:
+    - content.code.copy
+  palette:
+    - scheme: default
+      primary: black
+      toggle:
+        icon: material/weather-sunny
+        name: Light mode
+    - scheme: slate
+      primary: black
+      toggle:
+        icon: material/weather-night
+        name: Black mode
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+      linenums_style: pymdownx-inline
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - pymdownx.arithmatex:
+      generic: true
+
+
+nav:
+  - Index: index.md
+  - Architecture: architecture.md
+  - Sample Page 2: page_2.md
+
