@@ -1,0 +1,75 @@
+services: 
+  spark-master:
+    image: wlcamargo/spark-master
+    hostname: spark-master
+    container_name: spark-master
+    command: 
+      - /bin/sh
+      - -c
+      - |
+        /usr/local/spark/sbin/start-master.sh
+        start-notebook.sh --NotebookApp.token=''
+    ports:
+      - 8889:8888 #jupyter
+      - 8083:8080 #spark UI
+      - 4040:4040 #spark UI JOBS
+      - 7077:7077 # Default port for communication
+    volumes:
+      - ./conf/util:/util
+      - ./conf/env:/env 
+      #- ./notebooks:/home/user/work
+    networks:
+      - sparkanos
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  spark-worker1:
+    image: wlcamargo/spark-master
+    hostname:  spark-worker1
+    container_name: spark-worker1
+    command: 
+      - /bin/sh
+      - -c
+      - |
+        /usr/local/spark/sbin/start-worker.sh spark-master:7077
+        start-notebook.sh --NotebookApp.token='' 
+    ports:
+      - 5043:4040
+      - 5044:4041
+    volumes:
+      - .data/jobs_spark/spark/util:/util
+      - .data/jobs_spark/spark/env:/env 
+    depends_on:
+      - spark-master
+    networks:
+      - sparkanos
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  spark-worker2:
+    image: wlcamargo/spark-master
+    hostname: spark-worker2
+    container_name: spark-worker2
+    command: 
+      - /bin/sh
+      - -c
+      - |
+        /usr/local/spark/sbin/start-worker.sh spark-master:7077
+        start-notebook.sh --NotebookApp.token='' 
+    ports:
+      - 5045:4041
+      - 5046:4042
+    volumes:
+      - .data/jobs_spark/spark/util:/util
+      - .data/jobs_spark/spark/env:/env 
+    depends_on:
+      - spark-master
+    networks:
+      - sparkanos
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+
+networks:
+  sparkanos:
+    driver: bridge
