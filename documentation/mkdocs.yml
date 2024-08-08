@@ -168,6 +168,7 @@ nav:
   - Services:
     - services/postgres/postgres.md
     - services/minio/minio.md
+    - services/trino/trino.md
   - Tools:
     - tools/index.md
   - Tutorials:
