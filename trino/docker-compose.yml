@@ -1,0 +1,69 @@
+services:
+  trino:
+    image: wlcamargo/trino
+    container_name: trino
+    hostname: trino
+    ports:
+      - 8080:8080
+    volumes:
+      - ./conf/hive.properties:/etc/trino/catalog/hive.properties
+      - ./conf/delta.properties:/etc/trino/catalog/delta.properties
+      - ./conf/iceberg.properties:/etc/trino/catalog/iceberg.properties
+      - ./conf/postgres.properties:/etc/trino/catalog/postgres.properties
+      - ./conf/sqlserver.properties:/etc/trino/catalog/sqlserver.properties
+    networks:
+      - sparkanos
+    depends_on:
+      - metastore
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  metastore-db:
+    image: wlcamargo/mariadb
+    container_name: metastore-db
+    networks:
+      - sparkanos
+    volumes:
+      - metastore-db:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+  
+  create-metastore-schema:
+    image: wlcamargo/hive-metastore 
+    container_name: create-metastore-schema
+    depends_on:
+      - metastore-db
+    networks:
+      - sparkanos
+    command: /opt/hive-metastore/bin/schematool --verbose -initSchema -dbType mysql -userName ${MYSQL_ROOT_USER} -passWord ${MYSQL_ROOT_PASSWORD} -url jdbc:mysql://metastore-db:3306/metastore_db?createDatabaseIfNotExist=true
+    restart: "on-failure"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+  
+  metastore:
+    image: wlcamargo/hive-metastore
+    container_name: metastore
+    networks:
+      - sparkanos
+    volumes:
+      - ./metastore/metastore-site.xml:/opt/hive-metastore/conf/metastore-site.xml
+      - ./metastore/core-site.xml:/opt/hadoop/etc/hadoop/core-site.xml
+    environment:
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+    command: /opt/hive-metastore/bin/start-metastore -p 9083
+    depends_on:
+      - create-metastore-schema
+      - metastore-db
+    restart: always
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+networks:
+  sparkanos:
+    driver: bridge
+
+volumes:
+  metastore-db:
