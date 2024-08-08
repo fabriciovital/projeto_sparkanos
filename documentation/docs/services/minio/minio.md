@@ -1,6 +1,6 @@
 # Minio
 
-## Run Postgres
+## Run Minio
 ### Step 1
 ```
 cd minio
@@ -10,7 +10,7 @@ cd minio
 sudo docker compose up -d
 ```
 
-## Credentials Postgres
+## Credentials Minio
 ```
 cd minio
 ```
