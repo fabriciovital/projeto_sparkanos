@@ -3,7 +3,7 @@
 ## Run Postgres
 ### Step 1
 ```
-cd postgres_adventureworks
+cd applications/postgres_adventureworks
 ```
 ### Step 2
 ```
@@ -12,7 +12,7 @@ sudo docker compose up -d
 
 ## Credentials Postgres
 ```
-cd postgres_adventureworks
+cd applications/postgres_adventureworks
 ```
 file ```.env```
 

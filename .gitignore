@@ -1,2 +1,3 @@
 venv/
 /home/wallace/.cache/*
+airflow/dags/__pycache__/*

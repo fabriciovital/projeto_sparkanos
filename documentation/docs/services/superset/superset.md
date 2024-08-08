@@ -3,7 +3,7 @@
 ## Run Superset
 ### Step 1
 ```
-cd superset
+cd applications/superset
 ```
 ### Step 2
 ```
@@ -13,7 +13,7 @@ sudo docker compose up -d
 ## Credentials Superset
 ### Step 1
 ```
-cd superset
+cd applications/superset
 ```
 
 file ```key-superset.txt```

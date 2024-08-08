@@ -3,7 +3,7 @@
 ## Run Minio
 ### Step 1
 ```
-cd minio
+cd applications/minio
 ```
 ### Step 2
 ```
@@ -12,7 +12,7 @@ sudo docker compose up -d
 
 ## Credentials Minio
 ```
-cd minio
+cd applications/minio
 ```
 file ```.env```
 

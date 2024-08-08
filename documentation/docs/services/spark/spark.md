@@ -3,7 +3,7 @@
 ## Run Spark
 ### Step 1
 ```
-cd spark
+cd applications/spark
 ```
 ### Step 2
 ```

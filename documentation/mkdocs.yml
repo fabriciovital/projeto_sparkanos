@@ -170,6 +170,7 @@ nav:
     - services/minio/minio.md
     - services/trino/trino.md
     - services/spark/spark.md
+    - services/airflow/airflow.md
   - Tools:
     - tools/index.md
   - Tutorials:
