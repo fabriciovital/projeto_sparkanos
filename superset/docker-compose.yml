@@ -1,0 +1,126 @@
+x-superset-image: &superset-image wlcamargo/superset
+x-superset-depends-on: &superset-depends-on
+  - db
+  - redis
+
+x-superset-volumes: &superset-volumes
+  # /app/pythonpath_docker will be appended to the PYTHONPATH in the final container
+  - ./docker:/app/docker
+  - superset_home:/app/superset_home
+
+services:
+  redis:
+    image: wlcamargo/redis:latest
+    volumes:
+      - redis:/data
+    networks:
+      - sparkanos
+    expose:
+      - 6379
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 30s
+      retries: 50
+    restart: always
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  postgres:
+    image: wlcamargo/postgres:13
+    networks:
+      - sparkanos    
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER_AIRFLOW}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD_AIRFLOW}
+      POSTGRES_DB: ${POSTGRES_DB_AIRFLOW}
+    ports:
+      - 5432:5432
+    volumes:
+      - postgres-db-volume:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "airflow"]
+      interval: 5s
+      retries: 5
+    restart: always
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  db:
+    env_file: docker/.env-non-dev
+    image: wlcamargo/postgres:10
+    container_name: superset_db
+    restart: unless-stopped
+    volumes:
+      - db_home:/var/lib/postgresql/data
+    networks:
+      - sparkanos
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  superset:
+    env_file: docker/.env-non-dev
+    image: *superset-image
+    container_name: superset_app
+    command: ["/app/docker/docker-bootstrap.sh", "app-gunicorn"]
+    user: "root"
+    restart: unless-stopped
+    ports:
+      - 8088:8088
+    depends_on: *superset-depends-on
+    volumes: *superset-volumes
+    networks:
+      - sparkanos
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  superset-init:
+    image: *superset-image
+    container_name: superset_init
+    command: ["/app/docker/docker-init.sh"]
+    env_file: docker/.env
+    depends_on: *superset-depends-on
+    user: ${SUPERSET_USER}
+    volumes: *superset-volumes
+    networks:
+      - sparkanos
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  superset-worker:
+    image: *superset-image
+    container_name: superset_worker
+    command: ["/app/docker/docker-bootstrap.sh", "worker"]
+    env_file: docker/.env-non-dev
+    restart: unless-stopped
+    depends_on: *superset-depends-on
+    user: ${SUPERSET_USER}
+    volumes: *superset-volumes
+    networks:
+      - sparkanos
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  superset-worker-beat:
+    image: *superset-image
+    container_name: superset_worker_beat
+    command: ["/app/docker/docker-bootstrap.sh", "beat"]
+    env_file: docker/.env-non-dev
+    restart: unless-stopped
+    depends_on: *superset-depends-on
+    user: ${SUPERSET_USER}
+    volumes: *superset-volumes
+    networks:
+      - sparkanos
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+volumes:
+  superset_home:
+  db_home:
+  redis:
+  postgres-db-volume:
+
+networks:
+  sparkanos:
+    driver: bridge
