@@ -166,8 +166,8 @@ markdown_extensions:
 nav:
   - Home: home/index.md
   - Services:
-    - services/index.md
-    - services/run_services.md
+    - services/postgres/postgres.md
+    - services/minio/minio.md
   - Tools:
     - tools/index.md
   - Tutorials:
