@@ -1,0 +1,16 @@
+services:
+  postgres_adventureworks:
+    container_name: postgres_adventureworks
+    image: wlcamargo/postgres-adventureworks
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - '5435:5432'
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    restart: always
+
+volumes:
+  db_data:
+    driver: local
