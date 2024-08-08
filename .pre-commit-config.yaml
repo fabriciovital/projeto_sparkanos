@@ -3,36 +3,49 @@ repos:
     rev: v4.4.0
     hooks:
       - id: trailing-whitespace
+        files: ^src/
       - id: check-added-large-files
         args: ['--maxkb=5000']
+        files: ^src/
       - id: check-yaml
+        files: ^src/
       - id: check-json
+        files: ^src/
 
   - repo: https://github.com/psf/black
     rev: 24.2.0
     hooks:
       - id: black
         stages: [commit]
+        files: ^src/
 
   - repo: https://github.com/pre-commit/mirrors-isort
     rev: v5.10.1
     hooks:
       - id: isort
         stages: [commit]
+        files: ^src/
 
   - repo: https://github.com/pre-commit/mirrors-mypy
     rev: v1.4.0
     hooks:
       - id: mypy
+        files: ^src/
 
   - repo: https://github.com/pre-commit/mirrors-pylint
     rev: v2.6.0
     hooks:
       - id: pylint
         additional_dependencies: ['python-dotenv']
+        name: Run pylint
+        entry: pylint
+        language: python
+        types: [python]
+        files: ^src/
 
   - repo: https://github.com/PyCQA/bandit
     rev: 1.7.4
     hooks:
       - id: bandit
         args: ["--skip=B101"]
+        files: ^src/
