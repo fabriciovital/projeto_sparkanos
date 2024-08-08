@@ -37,8 +37,8 @@ services:
       - 5043:4040
       - 5044:4041
     volumes:
-      - .data/jobs_spark/spark/util:/util
-      - .data/jobs_spark/spark/env:/env 
+      - ./conf/util:/util
+      - ./conf/env:/env 
     depends_on:
       - spark-master
     networks:
@@ -60,15 +60,14 @@ services:
       - 5045:4041
       - 5046:4042
     volumes:
-      - .data/jobs_spark/spark/util:/util
-      - .data/jobs_spark/spark/env:/env 
+      - ./conf/util:/util
+      - ./conf/env:/env 
     depends_on:
       - spark-master
     networks:
       - sparkanos
     extra_hosts:
       - "host.docker.internal:host-gateway"
-
 
 networks:
   sparkanos:
