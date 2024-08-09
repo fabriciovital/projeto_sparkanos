@@ -1,3 +1,35 @@
+#Project
 venv/
-/home/wallace/.cache/*
-airflow/dags/__pycache__/*
+__pycache__/
+
+#Airflow
+applications/airflow/dags/__pycache__/*
+
+#Spark 
+src/notebooks/configs/.ipynb_checkpoints/*
+src/notebooks/functions/.ipynb_checkpoints/*
+src/notebooks/.ipynb_checkpoints/*
+
+#Python
+src/python
+__pycache__
+.ipynb_checkpoints/*
+
+#Portainer
+applications/portainer/portainer_data
+
+#Open Metadata
+applications/open_metadata/docker-volume/*
+applications/open_metadata/docker-volume
+
+#Terraform
+terraform/key_gcp.json
+terraform/.terraform.lock.hcl
+terraform/.terraform/providers/registry.terraform.io/hashicorp/google/4.51.0/linux_amd64/terraform-provider-google_v4.51.0_x5
+
+#Proxy Manager
+applications/nginx_proxy_manager/letsencrypt/*
+applications/nginx_proxy_manager/data/*
+
+
+
