@@ -17,7 +17,7 @@ services:
     volumes:
       - ./conf/util:/util
       - ./conf/env:/env 
-      #- ./notebooks:/home/user/work
+      - ${NOTEBOOK_PATH}:/home/user/work
     networks:
       - sparkanos
     extra_hosts:
