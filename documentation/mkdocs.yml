@@ -165,12 +165,15 @@ markdown_extensions:
 # Page tree
 nav:
   - Home: home/index.md
-  - Services:
+  - Services: 
+    - services/index.md
     - services/postgres/postgres.md
     - services/minio/minio.md
     - services/trino/trino.md
     - services/spark/spark.md
     - services/airflow/airflow.md
+    - services/open_metadata/open_metadata.md
+    - services/nginx_proxy_manager/nginx_proxy_manager.md
   - Tools:
     - tools/index.md
   - Tutorials:
