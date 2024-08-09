@@ -10,6 +10,8 @@ services:
     volumes:
       - db_data:/var/lib/postgresql/data
     restart: always
+    extra_hosts:
+      - "host.docker.internal:host-gateway"   
 
 volumes:
   db_data:
