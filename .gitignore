@@ -1,6 +1,6 @@
 #Project
 venv/
-__pycache__/
+applications/__pycache__/*
 
 #Airflow
 applications/airflow/dags/__pycache__/*
@@ -13,6 +13,7 @@ src/notebooks/.ipynb_checkpoints/*
 #Python
 src/python
 __pycache__
+__pycache__/
 .ipynb_checkpoints/*
 
 #Portainer
@@ -23,8 +24,7 @@ applications/open_metadata/docker-volume/*
 applications/open_metadata/docker-volume
 
 #Terraform
-terraform/cluster/key_gcp.json
-terraform/server/key_gcp.json
+terraform/key_gcp.json
 terraform/.terraform.lock.hcl
 terraform/.terraform/providers/registry.terraform.io/hashicorp/google/4.51.0/linux_amd64/terraform-provider-google_v4.51.0_x5
 
@@ -35,3 +35,11 @@ applications/nginx_proxy_manager/data/*
 
 
 
+
+applications/airflow/dags/__pycache__/airflow-dag-hello.cpython-37.pyc
+applications/airflow/dags/__pycache__/dag_adventure_works.cpython-37.pyc
+applications/airflow/dags/__pycache__/dag_s3.cpython-37.pyc
+applications/airflow/dags/__pycache__/hello.cpython-37.pyc
+applications/airflow/dags/__pycache__/sample_employee.cpython-37.pyc
+applications/airflow/dags/__pycache__/taskflow_api.cpython-37.pyc
+applications/airflow/dags/__pycache__/sample_employee.cpython-37.pyc
