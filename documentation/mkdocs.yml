@@ -103,14 +103,10 @@ extra:
     provider: google
     property: !ENV GOOGLE_ANALYTICS_KEY
   social:
-    - icon: fontawesome/brands/github
-      link: https://github.com/wlcamargo
-    - icon: fontawesome/brands/docker
-      link: https://hub.docker.com/r/wlcamargo/
     - icon: fontawesome/brands/youtube
-      link: https://www.youtube.com/@wallacecamargo1043
+      link: https://www.youtube.com/@arrudaconsulting
     - icon: fontawesome/brands/linkedin
-      link: https://www.linkedin.com/in/wallace-camargo-35b615171/
+      link: https://www.linkedin.com/company/arrudaconsulting/
 
 # Extensions
 markdown_extensions:
