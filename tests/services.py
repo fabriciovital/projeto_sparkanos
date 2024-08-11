@@ -1,4 +1,11 @@
-host = '172.21.121.140'
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
+host = os.getenv('HOST')
+
+print(host)
 
 services = {
     'minio': (f'http://{host}:9001', 'MinIO Console'),

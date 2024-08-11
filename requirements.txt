@@ -6,3 +6,6 @@ pylint==3.1.0
 bandit==1.7.4
 python-dotenv
 pytest 
+selenium 
+webdriver-manager 
+psycopg2-binary

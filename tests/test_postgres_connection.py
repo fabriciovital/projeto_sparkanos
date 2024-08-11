@@ -1,17 +1,19 @@
 import psycopg2
 import pytest
 from psycopg2 import OperationalError
+from dotenv import load_dotenv
+import os
 
-# Database configuration
+load_dotenv()
+
 DB_CONFIG = {
-    'host': '172.21.121.140',
-    'port': '5435',
-    'user': 'postgres',
-    'password': 'postgres',
-    'database': 'Adventureworks'
+    'host': os.getenv('HOST'),
+    'port': os.getenv('PORT_POSTGRES'),
+    'user': os.getenv('USER_POSTGRES'),
+    'password': os.getenv('PASSWORD_POSTGRES'),
+    'database': os.getenv('DATABASE')
 }
 
-# Function to create a connection to the PostgreSQL database
 def create_connection():
     try:
         connection = psycopg2.connect(
