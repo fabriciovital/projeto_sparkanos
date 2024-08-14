@@ -4,12 +4,23 @@ services:
     container_name: init
     environment:
       - SPARK_NO_DAEMONIZE=true
+    networks:
+      - spark-network
 
   jupyter:
     image: wlcamargo/jupyter-light
     container_name: jupyter
+    user: root
+    command: jupyter lab --ip 0.0.0.0 --port 8888 --no-browser --NotebookApp.token='' --NotebookApp.password='' --allow-root
+    environment:
+      - SPARK_MASTER=spark://spark-master:7077
+    extra_hosts:
+      - "host.docker.internal:host-gateway"  
     ports:
       - 8888:8888
+      - 4040:4040
+    networks:
+      - spark-network
     deploy:
       replicas: 1
       placement:
@@ -23,6 +34,8 @@ services:
     expose:
       - 7077
     command: /opt/spark/sbin/start-master.sh
+    networks:
+      - spark-network
     deploy:
       replicas: 1
       placement:
@@ -34,6 +47,8 @@ services:
     command: /opt/spark/sbin/start-worker.sh spark://spark-master:7077
     depends_on:
       - spark-master
+    networks:
+      - spark-network
     deploy:
       replicas: 3
       placement:
@@ -48,3 +63,7 @@ services:
     deploy:
       placement:
         constraints: [node.role == manager]
+
+networks:
+  spark-network:
+    driver: overlay
