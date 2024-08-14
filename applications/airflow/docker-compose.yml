@@ -3,7 +3,7 @@ x-airflow-common:
   # In order to add custom dependencies or upgrade provider packages you can use your extended image.
   # Comment the image line, place your Dockerfile in the directory where you placed the docker-compose.yaml
   # and uncomment the "build" line below, Then run `docker-compose build` to build the images.
-  image: ${AIRFLOW_IMAGE_NAME:-wlcamargo/airflow:2.5.0}
+  image: ${AIRFLOW_IMAGE_NAME:-apache/airflow:2.5.0}
   # build: .
   environment:
     &airflow-common-env
@@ -47,7 +47,7 @@ x-logging: &default-logging
 
 services:
   postgres:
-    image: wlcamargo/postgres:13
+    image: postgres:13
     networks:
       - sparkanos
     environment:
@@ -67,7 +67,7 @@ services:
       - "host.docker.internal:host-gateway"
 
   redis:
-    image: wlcamargo/redis:latest
+    image: redis:6.2
     volumes:
       - redis:/data
     networks:
@@ -260,16 +260,16 @@ services:
       - "host.docker.internal:host-gateway"
       
   docker-proxy:
-    image: wlcamargo/socat
+    image: alpine:latest  
     container_name: docker-proxy
-    command: "TCP4-LISTEN:2375,fork,reuseaddr UNIX-CONNECT:/var/run/docker.sock"
+    command: sh -c "apk add --no-cache socat && socat TCP4-LISTEN:2375,fork,reuseaddr UNIX-CONNECT:/var/run/docker.sock"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     networks:
-      - sparkanos
+      - sparkanos 
     extra_hosts:
-      - "host.docker.internal:host-gateway"
-  
+      - "host.docker.internal:host-gateway" 
+
 volumes:
   postgres-db-volume:
   redis:
