@@ -19,16 +19,11 @@
 # IN THE SOFTWARE.
 
 # Project information
-site_name: Big Data Project
+site_name: Sparkanos
 #site_url: https://squidfunk.github.io/mkdocs-material/
 site_author: Wallace Graca
 site_description: >-
-  Write your documentation in Markdown and create a professional static site in
-  minutes – searchable, customizable, in 60+ languages, for all devices
-
-# Repository
-#repo_name: wlcamargo/
-#repo_url: https://github.com/wlcamargo
+  Documentation about Sparkanos project.
 
 # Copyright
 copyright: Copyright &copy; 2024 Arruda Consulting
