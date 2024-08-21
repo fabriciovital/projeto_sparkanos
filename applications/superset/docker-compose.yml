@@ -1,4 +1,4 @@
-x-superset-image: &superset-image wlcamargo/superset
+x-superset-image: &superset-image apache/superset:1.5.3
 x-superset-depends-on: &superset-depends-on
   - db
   - redis
@@ -123,4 +123,4 @@ volumes:
 
 networks:
   sparkanos:
-    driver: bridge
+    external: true

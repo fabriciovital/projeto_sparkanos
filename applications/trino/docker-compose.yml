@@ -1,3 +1,5 @@
+version: '3.8'
+
 services:
   trino:
     image: wlcamargo/trino
@@ -10,7 +12,6 @@ services:
       - ./conf/delta.properties:/etc/trino/catalog/delta.properties
       - ./conf/iceberg.properties:/etc/trino/catalog/iceberg.properties
       - ./conf/postgres.properties:/etc/trino/catalog/postgres.properties
-      - ./conf/sqlserver.properties:/etc/trino/catalog/sqlserver.properties
     networks:
       - sparkanos
     depends_on:
@@ -63,7 +64,7 @@ services:
 
 networks:
   sparkanos:
-    driver: bridge
+    external: true
 
 volumes:
   metastore-db:

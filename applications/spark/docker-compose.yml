@@ -71,4 +71,4 @@ services:
 
 networks:
   sparkanos:
-    driver: bridge
+    external: true

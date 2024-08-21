@@ -10,9 +10,15 @@ services:
     volumes:
       - db_data:/var/lib/postgresql/data
     restart: always
+    networks:
+      - sparkanos
     extra_hosts:
       - "host.docker.internal:host-gateway"   
 
 volumes:
   db_data:
     driver: local
+
+networks:
+  sparkanos:
+    external: true
