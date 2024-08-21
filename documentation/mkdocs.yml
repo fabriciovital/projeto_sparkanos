@@ -178,15 +178,9 @@ nav:
     - Trino: tutorials/trino.md
     - Open Metadata: tutorials/open_metadata.md
   - Projects:
-    - projects/index.md
-    - AdventureWorks:
-      - Project Overview: projects/project_overview.md
-      - Configs: projects/configs.md
-      - Functions: projects/functions.md
-      - Convention Names: projects/convention_names.md
-      - Ingestions Type: projects/ingestions_type.md
-      - About Lakehouse: projects/lakehouse.md
-      - Variables: projects/variables.md
+    - Adventureworks: projects/adventureworks.md
+    - Convention Names: projects/conventional_names.md
+    - Ingestions Type: projects/ingestions_type.md
     - Full Update:
       - ELT Process FULL to Landing: projects/elt_process_full_postgres_to_landing.md
       - ELT Process FULL to Bronze: projects/elt_process_full_landing_to_bronze.md
