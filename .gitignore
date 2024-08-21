@@ -33,9 +33,6 @@ applications/nginx_proxy_manager/letsencrypt/*
 applications/nginx_proxy_manager/data/*
 
 
-
-
-
 applications/airflow/dags/__pycache__/airflow-dag-hello.cpython-37.pyc
 applications/airflow/dags/__pycache__/dag_adventure_works.cpython-37.pyc
 applications/airflow/dags/__pycache__/dag_s3.cpython-37.pyc
@@ -43,3 +40,4 @@ applications/airflow/dags/__pycache__/hello.cpython-37.pyc
 applications/airflow/dags/__pycache__/sample_employee.cpython-37.pyc
 applications/airflow/dags/__pycache__/taskflow_api.cpython-37.pyc
 applications/airflow/dags/__pycache__/sample_employee.cpython-37.pyc
+src/notebooks/examples/.ipynb_checkpoints/107_spark_sql-checkpoint.ipynb
