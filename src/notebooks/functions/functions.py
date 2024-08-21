@@ -19,3 +19,12 @@ def add_month_key(df, date_column_name):
         "month_key", date_format(df[date_column_name], "yyyyMM").cast(IntegerType())
     )
     return df_with_month_key
+
+
+def get_query(table_name, hdfs_source, prefix_layer_name_source, tables_queries):
+    if table_name in tables_queries:
+        return tables_queries[table_name].format(
+            hdfs_source=hdfs_source, prefix_layer_name_source=prefix_layer_name_source
+        )
+    else:
+        raise ValueError(f"No query found for table: {table_name}")
