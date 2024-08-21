@@ -1,5 +1,6 @@
 services:
   documentation:
+    container_name: documentation
     image: wlcamargo/mkdocs
     ports:
       - "8005:8000"
