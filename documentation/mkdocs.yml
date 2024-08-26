@@ -169,14 +169,14 @@ nav:
     - tools/index.md
   - Tutorials:
     - tutorials/index.md
-    - Docker: tutorials/docker.md
-    - Linux: tutorials/linux.md
-    - Airflow: tutorials/airflow.md
-    - Spark: tutorials/spark.md
-    - Minio: tutorials/minio.md
-    - Superset: tutorials/superset.md
-    - Trino: tutorials/trino.md
-    - Open Metadata: tutorials/open_metadata.md
+    - Docker: tutorials/docker/docker.md
+    - Linux: tutorials/linux/linux.md
+    - Airflow: tutorials/airflow/airflow.md
+    - Spark: tutorials/spark/spark.md
+    - Minio: tutorials/minio/minio.md
+    - Superset: tutorials/superset/superset.md
+    - Trino: tutorials/trino/trino.md
+    - Open Metadata: tutorials/open_metadata/open_metadata.md
   - Projects:
     - Adventureworks: projects/adventureworks.md
     - Convention Names: projects/conventional_names.md
