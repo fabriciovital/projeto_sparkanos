@@ -18,7 +18,7 @@ volumes:
 services:
   mysql:
     container_name: openmetadata_mysql
-    image: wlcamargo/openmetadata-db:1.2.4
+    image: docker.getcollate.io/openmetadata/db:1.4.8
     command: "--sort_buffer_size=10M"
     restart: always
     environment:
@@ -30,7 +30,7 @@ services:
     volumes:
      - ./docker-volume/db-data:/var/lib/mysql
     networks:
-      - app_net
+      - sparkanos
     healthcheck:
       test: mysql --user=root --password=$$MYSQL_ROOT_PASSWORD --silent --execute "use openmetadata_db"
       interval: 15s
@@ -39,23 +39,28 @@ services:
 
   elasticsearch:
     container_name: openmetadata_elasticsearch
-    image: wlcamargo/elasticsearch:8.10.2
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.10.2
     environment:
       - discovery.type=single-node
       - ES_JAVA_OPTS=-Xms1024m -Xmx1024m
       - xpack.security.enabled=false
     networks:
-      - app_net
+      - sparkanos
     ports:
       - "9200:9200"
       - "9300:9300"
+    healthcheck:
+      test: "curl -s http://localhost:9200/_cluster/health?pretty | grep status | grep -qE 'green|yellow' || exit 1"
+      interval: 15s
+      timeout: 10s
+      retries: 10
     volumes:
       - es-data:/usr/share/elasticsearch/data
 
   execute-migrate-all:
     container_name: execute_migrate_all
-    image: wlcamargo/openmetadata-server:1.2.4
-    command: "./bootstrap/bootstrap_storage.sh migrate-all"
+    image: docker.getcollate.io/openmetadata/server:1.4.8
+    command: "./bootstrap/openmetadata-ops.sh migrate"
     environment:
       OPENMETADATA_CLUSTER_NAME: ${OPENMETADATA_CLUSTER_NAME:-openmetadata}
       SERVER_PORT: ${SERVER_PORT:-8585}
@@ -82,7 +87,25 @@ services:
       AUTHENTICATION_CLIENT_ID: ${AUTHENTICATION_CLIENT_ID:-""}
       AUTHENTICATION_CALLBACK_URL: ${AUTHENTICATION_CALLBACK_URL:-""}
       AUTHENTICATION_JWT_PRINCIPAL_CLAIMS: ${AUTHENTICATION_JWT_PRINCIPAL_CLAIMS:-[email,preferred_username,sub]}
+      AUTHENTICATION_JWT_PRINCIPAL_CLAIMS_MAPPING: ${AUTHENTICATION_JWT_PRINCIPAL_CLAIMS_MAPPING:-[]}
       AUTHENTICATION_ENABLE_SELF_SIGNUP: ${AUTHENTICATION_ENABLE_SELF_SIGNUP:-true}
+      AUTHENTICATION_CLIENT_TYPE: ${AUTHENTICATION_CLIENT_TYPE:-public}
+      #For OIDC Authentication, when client is confidential
+      OIDC_CLIENT_ID: ${OIDC_CLIENT_ID:-""}
+      OIDC_TYPE: ${OIDC_TYPE:-""} # google, azure etc.
+      OIDC_CLIENT_SECRET: ${OIDC_CLIENT_SECRET:-""}
+      OIDC_SCOPE: ${OIDC_SCOPE:-"openid email profile"}
+      OIDC_DISCOVERY_URI: ${OIDC_DISCOVERY_URI:-""}
+      OIDC_USE_NONCE: ${OIDC_USE_NONCE:-true}
+      OIDC_PREFERRED_JWS: ${OIDC_PREFERRED_JWS:-"RS256"}
+      OIDC_RESPONSE_TYPE: ${OIDC_RESPONSE_TYPE:-"code"}
+      OIDC_DISABLE_PKCE: ${OIDC_DISABLE_PKCE:-true}
+      OIDC_CALLBACK: ${OIDC_CALLBACK:-"http://localhost:8585/callback"}
+      OIDC_SERVER_URL: ${OIDC_SERVER_URL:-"http://localhost:8585"}
+      OIDC_CLIENT_AUTH_METHOD: ${OIDC_CLIENT_AUTH_METHOD:-"client_secret_post"}
+      OIDC_TENANT: ${OIDC_TENANT:-""}
+      OIDC_MAX_CLOCK_SKEW: ${OIDC_MAX_CLOCK_SKEW:-""}
+      OIDC_CUSTOM_PARAMS: ${OIDC_CUSTOM_PARAMS:-{}}
       # For SAML Authentication
       # SAML_DEBUG_MODE: ${SAML_DEBUG_MODE:-false}
       # SAML_IDP_ENTITY_ID: ${SAML_IDP_ENTITY_ID:-""}
@@ -119,8 +142,6 @@ services:
       # AUTHENTICATION_LDAP_TRUSTSTORE_PATH: ${AUTHENTICATION_LDAP_TRUSTSTORE_PATH:-}
       # AUTHENTICATION_LDAP_KEYSTORE_PASSWORD: ${AUTHENTICATION_LDAP_KEYSTORE_PASSWORD:-}
       # AUTHENTICATION_LDAP_SSL_KEY_FORMAT: ${AUTHENTICATION_LDAP_SSL_KEY_FORMAT:-}
-      # AUTHENTICATION_LDAP_SSL_VERIFY_CERT_HOST: ${AUTHENTICATION_LDAP_SSL_VERIFY_CERT_HOST:-}
-      # AUTHENTICATION_LDAP_EXAMINE_VALIDITY_DATES: ${AUTHENTICATION_LDAP_EXAMINE_VALIDITY_DATES:-}
       # AUTHENTICATION_LDAP_ALLOW_WILDCARDS: ${AUTHENTICATION_LDAP_ALLOW_WILDCARDS:-}
       # AUTHENTICATION_LDAP_ALLOWED_HOSTNAMES: ${AUTHENTICATION_LDAP_ALLOWED_HOSTNAMES:-[]}
       # AUTHENTICATION_LDAP_SSL_VERIFY_CERT_HOST: ${AUTHENTICATION_LDAP_SSL_VERIFY_CERT_HOST:-}
@@ -159,6 +180,7 @@ services:
       ELASTICSEARCH_SOCKET_TIMEOUT_SECS: ${ELASTICSEARCH_SOCKET_TIMEOUT_SECS:-60}
       ELASTICSEARCH_KEEP_ALIVE_TIMEOUT_SECS: ${ELASTICSEARCH_KEEP_ALIVE_TIMEOUT_SECS:-600}
       ELASTICSEARCH_BATCH_SIZE: ${ELASTICSEARCH_BATCH_SIZE:-10}
+      ELASTICSEARCH_PAYLOAD_BYTES_SIZE: ${ELASTICSEARCH_PAYLOAD_BYTES_SIZE:-10485760}   #max payLoadSize in Bytes
       ELASTICSEARCH_INDEX_MAPPING_LANG: ${ELASTICSEARCH_INDEX_MAPPING_LANG:-EN}
 
       #eventMonitoringConfiguration
@@ -182,11 +204,16 @@ services:
       FERNET_KEY: ${FERNET_KEY:-jJ/9sz0g0OHxsfxOoSfdFdmk3ysNmPRnH3TUAbz3IHA=}
 
       #secretsManagerConfiguration
-      SECRET_MANAGER: ${SECRET_MANAGER:-noop}
-      #parameters:
+      SECRET_MANAGER: ${SECRET_MANAGER:-db}
+      # AWS:
       OM_SM_REGION: ${OM_SM_REGION:-""}
       OM_SM_ACCESS_KEY_ID: ${OM_SM_ACCESS_KEY_ID:-""}
       OM_SM_ACCESS_KEY: ${OM_SM_ACCESS_KEY:-""}
+      # Azure:
+      OM_SM_VAULT_NAME: ${OM_SM_VAULT_NAME:-""}
+      OM_SM_CLIENT_ID: ${OM_SM_CLIENT_ID:-""}
+      OM_SM_CLIENT_SECRET: ${OM_SM_CLIENT_SECRET:-""}
+      OM_SM_TENANT_ID: ${OM_SM_TENANT_ID:-""}
 
       #email configuration:
       OM_EMAIL_ENTITY: ${OM_EMAIL_ENTITY:-"OpenMetadata"}
@@ -199,9 +226,6 @@ services:
       SMTP_SERVER_USERNAME: ${SMTP_SERVER_USERNAME:-""}
       SMTP_SERVER_PWD: ${SMTP_SERVER_PWD:-""}
       SMTP_SERVER_STRATEGY: ${SMTP_SERVER_STRATEGY:-"SMTP_TLS"}
-
-      #changeEventConfig
-      OM_URI: ${OM_URI:- "http://localhost:8585"}
 
       # Heap OPTS Configurations
       OPENMETADATA_HEAP_OPTS: ${OPENMETADATA_HEAP_OPTS:--Xmx1G -Xms1G}
@@ -237,16 +261,16 @@ services:
       WEB_CONF_PERMISSION_POLICY_OPTION: ${WEB_CONF_PERMISSION_POLICY_OPTION:-""}
     depends_on:
       elasticsearch:
-        condition: service_started
+        condition: service_healthy
       mysql:
         condition: service_healthy
     networks:
-      - app_net
+      - sparkanos
 
   openmetadata-server:
     container_name: openmetadata_server
     restart: always
-    image: wlcamargo/openmetadata-server:1.2.4
+    image: docker.getcollate.io/openmetadata/server:1.4.8
     environment:
       OPENMETADATA_CLUSTER_NAME: ${OPENMETADATA_CLUSTER_NAME:-openmetadata}
       SERVER_PORT: ${SERVER_PORT:-8585}
@@ -270,7 +294,25 @@ services:
       AUTHENTICATION_CLIENT_ID: ${AUTHENTICATION_CLIENT_ID:-""}
       AUTHENTICATION_CALLBACK_URL: ${AUTHENTICATION_CALLBACK_URL:-""}
       AUTHENTICATION_JWT_PRINCIPAL_CLAIMS: ${AUTHENTICATION_JWT_PRINCIPAL_CLAIMS:-[email,preferred_username,sub]}
+      AUTHENTICATION_JWT_PRINCIPAL_CLAIMS_MAPPING: ${AUTHENTICATION_JWT_PRINCIPAL_CLAIMS_MAPPING:-[]}
       AUTHENTICATION_ENABLE_SELF_SIGNUP: ${AUTHENTICATION_ENABLE_SELF_SIGNUP:-true}
+      AUTHENTICATION_CLIENT_TYPE: ${AUTHENTICATION_CLIENT_TYPE:-public}
+      #For OIDC Authentication, when client is confidential
+      OIDC_CLIENT_ID: ${OIDC_CLIENT_ID:-""}
+      OIDC_TYPE: ${OIDC_TYPE:-""} # google, azure etc.
+      OIDC_CLIENT_SECRET: ${OIDC_CLIENT_SECRET:-""}
+      OIDC_SCOPE: ${OIDC_SCOPE:-"openid email profile"}
+      OIDC_DISCOVERY_URI: ${OIDC_DISCOVERY_URI:-""}
+      OIDC_USE_NONCE: ${OIDC_USE_NONCE:-true}
+      OIDC_PREFERRED_JWS: ${OIDC_PREFERRED_JWS:-"RS256"}
+      OIDC_RESPONSE_TYPE: ${OIDC_RESPONSE_TYPE:-"code"}
+      OIDC_DISABLE_PKCE: ${OIDC_DISABLE_PKCE:-true}
+      OIDC_CALLBACK: ${OIDC_CALLBACK:-"http://localhost:8585/callback"}
+      OIDC_SERVER_URL: ${OIDC_SERVER_URL:-"http://localhost:8585"}
+      OIDC_CLIENT_AUTH_METHOD: ${OIDC_CLIENT_AUTH_METHOD:-"client_secret_post"}
+      OIDC_TENANT: ${OIDC_TENANT:-""}
+      OIDC_MAX_CLOCK_SKEW: ${OIDC_MAX_CLOCK_SKEW:-""}
+      OIDC_CUSTOM_PARAMS: ${OIDC_CUSTOM_PARAMS:-{}}
       # For SAML Authentication
       # SAML_DEBUG_MODE: ${SAML_DEBUG_MODE:-false}
       # SAML_IDP_ENTITY_ID: ${SAML_IDP_ENTITY_ID:-""}
@@ -307,8 +349,6 @@ services:
       # AUTHENTICATION_LDAP_TRUSTSTORE_PATH: ${AUTHENTICATION_LDAP_TRUSTSTORE_PATH:-}
       # AUTHENTICATION_LDAP_KEYSTORE_PASSWORD: ${AUTHENTICATION_LDAP_KEYSTORE_PASSWORD:-}
       # AUTHENTICATION_LDAP_SSL_KEY_FORMAT: ${AUTHENTICATION_LDAP_SSL_KEY_FORMAT:-}
-      # AUTHENTICATION_LDAP_SSL_VERIFY_CERT_HOST: ${AUTHENTICATION_LDAP_SSL_VERIFY_CERT_HOST:-}
-      # AUTHENTICATION_LDAP_EXAMINE_VALIDITY_DATES: ${AUTHENTICATION_LDAP_EXAMINE_VALIDITY_DATES:-}
       # AUTHENTICATION_LDAP_ALLOW_WILDCARDS: ${AUTHENTICATION_LDAP_ALLOW_WILDCARDS:-}
       # AUTHENTICATION_LDAP_ALLOWED_HOSTNAMES: ${AUTHENTICATION_LDAP_ALLOWED_HOSTNAMES:-[]}
       # AUTHENTICATION_LDAP_SSL_VERIFY_CERT_HOST: ${AUTHENTICATION_LDAP_SSL_VERIFY_CERT_HOST:-}
@@ -347,6 +387,7 @@ services:
       ELASTICSEARCH_SOCKET_TIMEOUT_SECS: ${ELASTICSEARCH_SOCKET_TIMEOUT_SECS:-60}
       ELASTICSEARCH_KEEP_ALIVE_TIMEOUT_SECS: ${ELASTICSEARCH_KEEP_ALIVE_TIMEOUT_SECS:-600}
       ELASTICSEARCH_BATCH_SIZE: ${ELASTICSEARCH_BATCH_SIZE:-10}
+      ELASTICSEARCH_PAYLOAD_BYTES_SIZE: ${ELASTICSEARCH_PAYLOAD_BYTES_SIZE:-10485760}   #max payLoadSize in Bytes
       ELASTICSEARCH_INDEX_MAPPING_LANG: ${ELASTICSEARCH_INDEX_MAPPING_LANG:-EN}
 
       #eventMonitoringConfiguration
@@ -370,7 +411,7 @@ services:
       FERNET_KEY: ${FERNET_KEY:-jJ/9sz0g0OHxsfxOoSfdFdmk3ysNmPRnH3TUAbz3IHA=}
 
       #secretsManagerConfiguration
-      SECRET_MANAGER: ${SECRET_MANAGER:-noop}
+      SECRET_MANAGER: ${SECRET_MANAGER:-db}
       #parameters:
       OM_SM_REGION: ${OM_SM_REGION:-""}
       OM_SM_ACCESS_KEY_ID: ${OM_SM_ACCESS_KEY_ID:-""}
@@ -387,9 +428,6 @@ services:
       SMTP_SERVER_USERNAME: ${SMTP_SERVER_USERNAME:-""}
       SMTP_SERVER_PWD: ${SMTP_SERVER_PWD:-""}
       SMTP_SERVER_STRATEGY: ${SMTP_SERVER_STRATEGY:-"SMTP_TLS"}
-
-      #changeEventConfig
-      OM_URI: ${OM_URI:- "http://localhost:8585"}
 
       # Heap OPTS Configurations
       OPENMETADATA_HEAP_OPTS: ${OPENMETADATA_HEAP_OPTS:--Xmx1G -Xms1G}
@@ -426,19 +464,19 @@ services:
       - "8586:8586"
     depends_on:
       elasticsearch:
-        condition: service_started
+        condition: service_healthy
       mysql:
         condition: service_healthy
       execute-migrate-all:
         condition: service_completed_successfully
     networks:
-      - app_net
+      - sparkanos
     healthcheck:
       test: [ "CMD", "wget", "-q", "--spider",  "http://localhost:8586/healthcheck" ]
 
   ingestion:
     container_name: openmetadata_ingestion
-    image: wlcamargo/openmetadata-ingestion:1.2.4
+    image: docker.getcollate.io/openmetadata/ingestion:1.4.8
     depends_on:
       elasticsearch:
         condition: service_started
@@ -470,20 +508,16 @@ services:
     command:
       - "/opt/airflow/ingestion_dependency.sh"
     expose:
-      - 8080
+      - 8087
     ports:
       - "8087:8080"
     networks:
-      - app_net
+      - sparkanos
     volumes:
       - ingestion-volume-dag-airflow:/opt/airflow/dag_generated_configs
       - ingestion-volume-dags:/opt/airflow/dags
       - ingestion-volume-tmp:/tmp
 
-
 networks:
-  app_net:
-    ipam:
-      driver: default
-      config:
-        - subnet: "172.16.240.0/24"
+  sparkanos:
+    external: true

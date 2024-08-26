@@ -9,3 +9,9 @@ services:
     volumes:
       - ./data:/data
       - ./letsencrypt:/etc/letsencrypt
+    networks:
+      - sparkanos
+      
+networks:
+  sparkanos:
+    external: true

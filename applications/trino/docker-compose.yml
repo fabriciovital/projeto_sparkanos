@@ -1,8 +1,6 @@
-version: '3.8'
-
 services:
   trino:
-    image: wlcamargo/trino
+    image: trinodb/trino:405
     container_name: trino
     hostname: trino
     ports:

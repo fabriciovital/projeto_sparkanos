@@ -1,6 +1,13 @@
-services: 
+x-spark-common: &spark-common
+  image: wlcamargo/spark-master
+  networks:
+    - sparkanos
+  extra_hosts:
+    - "host.docker.internal:host-gateway"
+
+services:
   spark-master:
-    image: wlcamargo/spark-master
+    <<: *spark-common
     hostname: spark-master
     container_name: spark-master
     command: 
@@ -9,45 +16,37 @@ services:
       - |
         /usr/local/spark/sbin/start-master.sh
         start-notebook.sh --NotebookApp.token=''
-    ports:
-      - 8889:8888 #jupyter
-      - 8083:8080 #spark UI
-      - 4040:4040 #spark UI JOBS
-      - 7077:7077 # Default port for communication
     volumes:
       - ./conf/util:/util
-      - ./conf/env:/env 
+      - ./conf/env:/env
       - ${NOTEBOOK_PATH}:/home/user/work
-    networks:
-      - sparkanos
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
+    ports:
+      - 8889:8888 # Jupyter
+      - 8083:8080 # Spark UI
+      - 4040:4040 # Spark UI Jobs
+      - 7077:7077 # Default port for communication
 
   spark-worker1:
-    image: wlcamargo/spark-master
-    hostname:  spark-worker1
+    <<: *spark-common
+    hostname: spark-worker1
     container_name: spark-worker1
     command: 
       - /bin/sh
       - -c
       - |
         /usr/local/spark/sbin/start-worker.sh spark-master:7077
-        start-notebook.sh --NotebookApp.token='' 
+        start-notebook.sh --NotebookApp.token=''
+    volumes:
+      - ./conf/util:/util
+      - ./conf/env:/env
     ports:
       - 5043:4040
       - 5044:4041
-    volumes:
-      - ./conf/util:/util
-      - ./conf/env:/env 
     depends_on:
       - spark-master
-    networks:
-      - sparkanos
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
 
   spark-worker2:
-    image: wlcamargo/spark-master
+    <<: *spark-common
     hostname: spark-worker2
     container_name: spark-worker2
     command: 
@@ -55,19 +54,15 @@ services:
       - -c
       - |
         /usr/local/spark/sbin/start-worker.sh spark-master:7077
-        start-notebook.sh --NotebookApp.token='' 
+        start-notebook.sh --NotebookApp.token=''
+    volumes:
+      - ./conf/util:/util
+      - ./conf/env:/env
     ports:
       - 5045:4041
       - 5046:4042
-    volumes:
-      - ./conf/util:/util
-      - ./conf/env:/env 
     depends_on:
       - spark-master
-    networks:
-      - sparkanos
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
 
 networks:
   sparkanos:
