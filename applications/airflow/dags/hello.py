@@ -9,6 +9,7 @@ import pendulum
     tags=["example"],
     description='Um simples DAG de Hello World com decoradores'
 )
+
 def airflow_messages():
     @task(task_id='print_hello')
     def say_hello():
