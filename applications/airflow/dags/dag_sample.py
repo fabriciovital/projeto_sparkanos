@@ -34,7 +34,7 @@ with DAG(
 
     sample_employee_task = run_container(
         dag=dag,
-        image='sparkanos',
+        image='wlcamargo/sparkanos-adventure-works',
         container_name='sample_airflow',
         command="spark-submit /app/111_sample_airflow.py"
     )

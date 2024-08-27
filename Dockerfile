@@ -19,6 +19,7 @@ COPY src/notebooks/114_update_landing.py /app/
 COPY src/notebooks/115_update_bronze.py /app/
 COPY src/notebooks/116_update_silver.py /app/
 COPY src/notebooks/117_update_gold.py /app/
+COPY src/notebooks/examples/111_sample_airflow.py /app/
 
 # Spark Configs
 COPY applications/spark/conf/env /env/
