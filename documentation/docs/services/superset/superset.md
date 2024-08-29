@@ -19,6 +19,7 @@ cd applications/superset
 file ```key-superset.txt```
 
 ### Access Superset
+localhost:8088
 
 sample Superset UI:
 
