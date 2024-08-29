@@ -1,7 +1,7 @@
 # Construcao da imagem do mkdocs
 
 # Usar a imagem base Python oficial
-FROM python:3.11-slim
+FROM python:3.11.9-alpine
 
 # Definir o diretório de trabalho
 WORKDIR /docs

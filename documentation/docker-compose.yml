@@ -1,7 +1,7 @@
 services:
   documentation:
     container_name: documentation
-    image: wlcamargo/mkdocs
+    image: wlcamargo/mkdocs:v2
     ports:
       - "8005:8000"
     volumes:
