@@ -41,7 +41,7 @@ jobs:
       - name: Run tests
         env:
           HOST: ${{ steps.get_postgres_ip.outputs.POSTGRES_IP }}  # Usar o IP obtido do container
-          PORT_POSTGRES: 5435
+          PORT_POSTGRES: 5432
           USER_POSTGRES: postgres
           PASSWORD_POSTGRES: postgres
           DATABASE: Adventureworks
