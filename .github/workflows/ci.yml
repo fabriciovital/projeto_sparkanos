@@ -20,7 +20,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install pytest python-dotenv selenium webdriver-manager psycopg2-binary
+          pip install pytest python-dotenv selenium psycopg2-binary
 
       - name: Add network sparkanos
         run: |
@@ -30,6 +30,7 @@ jobs:
         working-directory: applications/postgres_adventureworks
         run: |
           docker compose up -d
+          sleep 30
 
       - name: Run tests
         #working-directory: applications/postgres_adventureworks

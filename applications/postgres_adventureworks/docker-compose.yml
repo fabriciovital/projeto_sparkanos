@@ -1,5 +1,6 @@
 services:
   postgres_adventureworks:
+    hostname: postgres_adventureworks
     container_name: postgres_adventureworks
     image: wlcamargo/postgres-adventureworks
     environment:
