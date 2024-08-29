@@ -29,7 +29,7 @@ jobs:
         working-directory: applications/postgres_adventureworks
         run: |
           docker compose up -d
-          sleep 30  # Aguarda o PostgreSQL iniciar completamente
+          sleep 15  # Aguarda o PostgreSQL iniciar completamente
 
       - name: Get PostgreSQL container IP
         id: get_postgres_ip
@@ -40,9 +40,9 @@ jobs:
         
       - name: Run tests
         env:
-          HOST: ${{ steps.get_postgres_ip.outputs.POSTGRES_IP }}  # Usar o IP obtido do container
-          PORT_POSTGRES: 5432
-          USER_POSTGRES: postgres
-          PASSWORD_POSTGRES: postgres
-          DATABASE: Adventureworks
+          HOST: ${{ steps.get_postgres_ip.outputs.POSTGRES_IP }} 
+          PORT_POSTGRES: ${{ secrets.POSTGRES_PORT }}  # Obtido do Secrets/Environment do GitHub
+          USER_POSTGRES: ${{ secrets.POSTGRES_USER }}
+          PASSWORD_POSTGRES: ${{ secrets.POSTGRES_PASSWORD }}
+          DATABASE: ${{ secrets.POSTGRES_DB }}
         run: pytest tests/test_postgres_connection.py
