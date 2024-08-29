@@ -22,6 +22,10 @@ jobs:
           python -m pip install --upgrade pip
           pip install pytest python-dotenv
 
+      - name: Add network sparkanos
+        run: |
+            docker network create sparkanos       
+
       - name: Enter application directory
         working-directory: applications/postgres_adventureworks
         run: |
