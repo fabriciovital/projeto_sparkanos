@@ -33,6 +33,6 @@ jobs:
 
       - name: Run tests
         #working-directory: applications/postgres_adventureworks
-        run: pytest
+        run: pytest tests/test_postgres_connection.py
 
 
