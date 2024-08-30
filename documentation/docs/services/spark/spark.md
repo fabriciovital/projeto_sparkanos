@@ -30,3 +30,5 @@ localhost:4040
 Sample job running:
 (just when job running)
 
+![image](./assets/job-spark-running.png)
+
