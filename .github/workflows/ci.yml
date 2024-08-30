@@ -41,7 +41,7 @@ jobs:
       - name: Run tests
         env:
           HOST: ${{ steps.get_postgres_ip.outputs.POSTGRES_IP }} 
-          PORT_POSTGRES: ${{ secrets.POSTGRES_PORT }}  # Obtido do Secrets/Environment do GitHub
+          PORT_POSTGRES: ${{ secrets.POSTGRES_PORT }} 
           USER_POSTGRES: ${{ secrets.POSTGRES_USER }}
           PASSWORD_POSTGRES: ${{ secrets.POSTGRES_PASSWORD }}
           DATABASE: ${{ secrets.POSTGRES_DB }}
