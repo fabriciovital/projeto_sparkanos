@@ -1,96 +1,27 @@
-## For activate and use virtual environment
-Step 1
+# Sparkanos Project
+
+Esse projeto tem como finalidade prover um ambiente big data/modern data stack usando um ambiente de containers com Docker.
+
+Para instalar a documentacao e entender como rodar cada container, entre na pasta ```documentation.```
 ```
-python3 -m venv venv
+cd documentation
 ```
 
-Step 2
+Execute o comando abaixo para baixar a imagem e rodar o container da documentação:
 ```
-source venv/bin/activate
-```
-
-Step 3
-```
-pip install -r requirements.txt
+docker compose up -d documentation
 ```
 
-## Pre-commit init
-```
-pre-commit install
-```
+## Exemplo documentação rodando
 
-## Pre-commit check
-```
-pre-commit run --all-files
-```
+###  Documentação do Projeto
+![Imagemi](./docs/assets/images/documentation.png)
 
-## Command to draw the tree
-```
-tree -I 'venv|documentation|__pycache__|*.pyc|*.ipynb_checkpoints'
-```
+Na documentação você encontrará todos os detalhes do projeto e acesso aos serviços. 
 
-## Project structure 
-```
-├── LICENSE
-├── README.md
-├── applications
-│   ├── airflow
-│   │   ├── dags
-│   │   │   ├── __init__.py
-│   │   │   ├── airflow-dag-hello.py
-│   │   │   ├── dag_adventure_works.py
-│   │   │   ├── dag_s3.py
-│   │   │   ├── hello.py
-│   │   │   ├── sample_employee.py
-│   │   │   └── taskflow_api.py
-│   │   ├── docker-compose.yml
-│   │   └── secret-airflow.txt
-│   ├── minio
-│   │   └── docker-compose.yml
-│   ├── postgres_adventureworks
-│   │   └── docker-compose.yml
-│   ├── spark
-│   │   ├── conf
-│   │   │   ├── env
-│   │   │   │   ├── jupyter.env
-│   │   │   │   ├── start-master.sh
-│   │   │   │   └── start-worker.sh
-│   │   │   └── util
-│   │   ├── docker-compose.yml
-│   │   └── util
-│   │       ├── core-site.xml
-│   │       ├── hadoop-aws-3.3.1.jar
-│   │       ├── hdfs-site.xml
-│   │       ├── hive-site.xml
-│   │       ├── postgresql-42.5.1.jar
-│   │       └── trino-jdbc-406.jar
-│   ├── superset
-│   │   ├── docker
-│   │   │   ├── README.md
-│   │   │   ├── docker-bootstrap.sh
-│   │   │   ├── docker-ci.sh
-│   │   │   ├── docker-frontend.sh
-│   │   │   ├── docker-init.sh
-│   │   │   ├── frontend-mem-nag.sh
-│   │   │   ├── pythonpath_dev
-│   │   │   │   ├── superset_config.py
-│   │   │   │   └── superset_config_local.example
-│   │   │   ├── requirements-local.txt
-│   │   │   └── run-server.sh
-│   │   ├── docker-compose.yml
-│   │   └── key-superset.txt
-│   └── trino
-│       ├── conf
-│       │   ├── delta.properties
-│       │   ├── hive.properties
-│       │   ├── iceberg.properties
-│       │   ├── postgres.properties
-│       │   └── sqlserver.properties
-│       ├── docker-compose.yml
-│       └── metastore
-│           ├── core-site.xml
-│           └── metastore-site.xml
-├── requirements.txt
-└── src
-    └── notebooks
-```
+
+### Como acessar a documentação?
+
+clique no link abaixo ou digite no navegador:
+
+http://localhost:8005/
