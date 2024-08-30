@@ -12,14 +12,6 @@ Execute o comando abaixo para baixar a imagem e rodar o container da documentaç
 docker compose up -d documentation
 ```
 
-## Exemplo documentação rodando
-
-###  Documentação do Projeto
-![Imagemi](./docs/assets/images/documentation.png)
-
-Na documentação você encontrará todos os detalhes do projeto e acesso aos serviços. 
-
-
 ### Como acessar a documentação?
 
 clique no link abaixo ou digite no navegador:
