@@ -6,7 +6,6 @@ repos:
         files: ^src/
       - id: check-added-large-files
         args: ['--maxkb=5000']
-        files: ^src/
       - id: check-yaml
         files: ^src/
       - id: check-json
