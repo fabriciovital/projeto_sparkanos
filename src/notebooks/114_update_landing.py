@@ -106,3 +106,4 @@ def ingest_data():
 if __name__ == "__main__":
     spark = configure_spark()
     ingest_data()
+    
