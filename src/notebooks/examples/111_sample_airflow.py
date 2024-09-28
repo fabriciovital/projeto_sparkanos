@@ -2,13 +2,21 @@ from pyspark import SparkConf, SparkContext
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import *
 from pyspark.sql.types import *
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
+HOST_ADDRESS=os.getenv('HOST_ADDRESS')
+MINIO_ACCESS_KEY=os.getenv('MINIO_ACCESS_KEY')
+MINIO_SECRET_KEY=os.getenv('MINIO_SECRET_KEY')
 
 # Configuração do Spark
 conf = SparkConf()
 conf.setAppName("Sample Airflow")
-conf.set("spark.hadoop.fs.s3a.endpoint", "http://minio:9000")
-conf.set("spark.hadoop.fs.s3a.access.key", "chapolin")
-conf.set("spark.hadoop.fs.s3a.secret.key", "mudar@123")
+conf.set("spark.hadoop.fs.s3a.endpoint", f"http://{HOST_ADDRESS}:9000")
+conf.set("spark.hadoop.fs.s3a.access.key", MINIO_ACCESS_KEY)
+conf.set("spark.hadoop.fs.s3a.secret.key", MINIO_SECRET_KEY)
 conf.set("spark.hadoop.fs.s3a.path.style.access", True)
 conf.set("spark.hadoop.fs.s3a.impl", "org.apache.hadoop.fs.s3a.S3AFileSystem")
 conf.set(
